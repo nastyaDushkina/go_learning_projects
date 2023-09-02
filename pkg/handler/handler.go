@@ -1,10 +1,19 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"todo_app/pkg/service"
+
+	"github.com/gin-gonic/gin"
+)
 
 // имплементируем хэндлеры
 
 type Handler struct {
+	services *service.Service
+}
+
+func NewHandler(services *service.Service) *Handler {
+	return &Handler{services: services}
 }
 
 // web http framework
