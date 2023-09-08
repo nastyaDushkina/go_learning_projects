@@ -3,7 +3,7 @@ package todo
 // можно хранить структуры на самом верхнем уровне проекта
 
 type User struct {
-	Id int `json:"-"`
+	Id int `json:"-" db:"id"`
 	// валидация наличия полей в теле запросаб реализация фреймворка gin
 	Name     string `json:"name" binding:"required"`
 	Username string `json:"username" binding:"required"`
