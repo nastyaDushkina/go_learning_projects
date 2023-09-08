@@ -2,6 +2,7 @@ package service
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"time"
 	todo "todo_app"
@@ -35,6 +36,26 @@ func (s *AuthService) CreateUser(user todo.User) (int, error) {
 	// хэшируем пароль
 	user.Password = generatePasswordHash(user.Password)
 	return s.repo.CreateUser(user)
+}
+
+func (s *AuthService) ParseToken(accessToken string) (int, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid string method")
+		}
+		return []byte(signingKey), nil
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(*tokenClaims)
+	if !ok {
+		return 0, errors.New("token claims are not type *token.Claims")
+	}
+
+	return claims.UserId, nil
 }
 
 func (s *AuthService) GenerateToken(username, password string) (string, error) {
