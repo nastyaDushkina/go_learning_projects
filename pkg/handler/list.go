@@ -89,6 +89,9 @@ func (h *Handler) updateList(c *gin.Context) {
 		return
 	}
 
+	// еслибы только один из всех дочерних элементов имел метод Update,
+	// то можно было бы опустить обращение к интерфейсу:
+	// err := h.services.Update(userId, id, input)
 	if err := h.services.TodoList.Update(userId, id, input); err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
