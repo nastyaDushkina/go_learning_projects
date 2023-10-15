@@ -1,7 +1,12 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	todo "todo_app" //todo package
 	"todo_app/pkg/handler"
 	"todo_app/pkg/repository"
@@ -44,8 +49,31 @@ func main() {
 	//handlers := new(handler.Handler)
 	srv := new(todo.Server)
 
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		logrus.Fatalf("error occured while running http server: %s", err.Error())
+	// под каждый запрос создаётся отдельная горутина, также приложение делает запросы
+	// к БД и выполняет транзакциию
+	// Плавное завершение работы должно гарантировать, что новые запросы не будут больше приниматься,
+	// но все текущие запросы к бд будут завершены
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logrus.Fatalf("error occured while running http server: %s", err.Error())
+		}
+	}()
+
+	logrus.Print("TodoApp Strted")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+
+	<-quit //блокирует выполнение главной горутины - мэйн (чтение из канала)
+
+	logrus.Print("TodoApp Shutting Down")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logrus.Errorf("error occured on server shutting down: %s", err.Error())
+	}
+
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
 }
 
