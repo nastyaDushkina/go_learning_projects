@@ -4,6 +4,11 @@ import (
 	"todo_app/pkg/service"
 
 	"github.com/gin-gonic/gin"
+
+	_ "todo_app/docs" // пустой импорт
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // имплементируем хэндлеры
@@ -19,6 +24,9 @@ func NewHandler(services *service.Service) *Handler {
 // web http framework
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// router.Run(":8080")
 
 	auth := router.Group("/auth")
 	{
