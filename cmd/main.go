@@ -18,6 +18,18 @@ import (
 	"github.com/spf13/viper"
 )
 
+// для сваггера исп-ся с-ма аннатаций, которая пишется в комментариях проекта
+
+// @title Todo App API
+// @version 1.0
+
+// @host localhost:8000
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	// объект конфигурации
