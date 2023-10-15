@@ -21,7 +21,7 @@ func (r *TodoListPostgres) Create(userId int, list todo.TodoList) (int, error) {
 	// создаем новую транзакцию
 	tx, err := r.db.Begin()
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 
 	var id int
@@ -81,12 +81,12 @@ func (r *TodoListPostgres) Update(userId int, listId int, input todo.UpdateListI
 
 	if input.Title != nil {
 		setValues = append(setValues, fmt.Sprintf("title=$%d", argId))
-		args = append(args, *&input.Title)
+		args = append(args, &input.Title)
 		argId++
 	}
 	if input.Description != nil {
 		setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
-		args = append(args, *&input.Description)
+		args = append(args, &input.Description)
 		argId++
 	}
 
