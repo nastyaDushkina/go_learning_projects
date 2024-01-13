@@ -18,7 +18,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	//c v1.5.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/mattn/go-sqlite3 v1.14.16 // indirect
+	github.com/mattn/go-sqlite3 v1.14.19 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect
