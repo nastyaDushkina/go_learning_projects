@@ -13,7 +13,8 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-// go run ./cmd/migrator --storage-path=./storage/sso.db --migrations-path=./migrations
+// go run ./cmd/migrator/main.go --storage-path=./storage/sso.db --migrations-path=./migrations
+// go run ./cmd/migrator/main.go --storage-path=./storage/sso.db --migrations-path=./tests/migrations --migrations-table=migrations_tests
 
 // migrationsTable - задаём для возможности хранения версии тестовой базы (для тестов)
 // для тестов будут тестовые миграции
